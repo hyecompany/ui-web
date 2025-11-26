@@ -115,7 +115,6 @@ export default function DataTable({
   getRowClassName?: (row: Row<object>) => string | undefined;
 }) {
   let columns: ColumnDef<object, unknown>[] = cols.map((col) => {
-    console.log(typeof col.header);
     return {
       ...col,
       id:
@@ -216,7 +215,6 @@ export default function DataTable({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
-                  console.log(header.getSize());
                   return (
                     <TableHead
                       className="min-w-0"
