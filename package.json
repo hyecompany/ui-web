@@ -1,0 +1,8 @@
+{
+  "name": "ui-web",
+  "version": "1.0.0",
+  "description": "UI components for Hye web applications",
+  "dependencies": {
+    "react": "^19.2.0"
+  }
+}
