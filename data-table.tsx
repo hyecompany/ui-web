@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import * as React from "react";
+import * as React from 'react';
 import {
   CellContext,
   Column,
@@ -16,12 +16,12 @@ import {
   SortingState,
   useReactTable,
   VisibilityState,
-} from "@tanstack/react-table";
+} from '@tanstack/react-table';
 
-import { Button } from "./button";
-import { Checkbox } from "./checkbox";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
-import { Input } from "./input";
+import { Button } from './button';
+import { Checkbox } from './checkbox';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from './hover-card';
+import { Input } from './input';
 import {
   Table,
   TableBody,
@@ -29,12 +29,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./table";
-import { ArrowDown } from "lucide-react";
-import { cn } from "./lib/utils";
+} from './table';
+import { ArrowDown } from 'lucide-react';
+import { cn } from './lib/utils';
 
-interface DataTableColumnHeaderProps<TData, TValue>
-  extends React.HTMLAttributes<HTMLDivElement> {
+interface DataTableColumnHeaderProps<
+  TData,
+  TValue,
+> extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
   title: string;
 }
@@ -49,23 +51,23 @@ export function DataTableColumnHeader<TData, TValue>({
   }
   if (!column.getCanFilter()) {
     return (
-      <div className={cn("flex items-center gap-2", className)} {...props}>
+      <div className={cn('flex items-center gap-2', className)} {...props}>
         <Button
           variant="ghost"
           size="sm"
           className="data-[state=open]:bg-accent -ml-3 h-8"
           onClick={() =>
-            column.toggleSorting(column.getIsSorted() === "asc" ? true : false)
+            column.toggleSorting(column.getIsSorted() === 'asc' ? true : false)
           }
         >
           <span>{title}</span>
           <ArrowDown
             className={`transition-all duration-100 rotate-0 ${
-              column.getIsSorted() == "desc"
-                ? ""
-                : column.getIsSorted() == "asc"
-                ? "rotate-180"
-                : "hidden"
+              column.getIsSorted() == 'desc'
+                ? ''
+                : column.getIsSorted() == 'asc'
+                  ? 'rotate-180'
+                  : 'hidden'
             }`}
           />
         </Button>
@@ -73,7 +75,7 @@ export function DataTableColumnHeader<TData, TValue>({
     );
   }
   return (
-    <div className={cn("flex items-center gap-2", className)} {...props}>
+    <div className={cn('flex items-center gap-2', className)} {...props}>
       <HoverCard>
         <HoverCardTrigger asChild>
           <Button
@@ -101,6 +103,7 @@ export default function DataTable({
   onSelectionChange,
   onRowClick,
   getRowClassName,
+  disablePagination,
 }: {
   data: object[];
   cols: ColumnDef<object, unknown>[];
@@ -110,19 +113,21 @@ export default function DataTable({
   onSelectionChange?: (rows: Row<object>[]) => void;
   onRowClick?: (
     row: Row<object>,
-    event: React.MouseEvent<HTMLTableRowElement, MouseEvent>
+    event: React.MouseEvent<HTMLTableRowElement, MouseEvent>,
   ) => void;
   getRowClassName?: (row: Row<object>) => string | undefined;
+  disablePagination?: boolean;
 }) {
   let columns: ColumnDef<object, unknown>[] = cols.map((col) => {
+    console.log(typeof col.header);
     return {
       ...col,
       id:
-        typeof col.header == "string" && !col.id
+        typeof col.header == 'string' && !col.id
           ? col.header.toString().toLowerCase()
           : col.id,
       header:
-        typeof col.header == "string"
+        typeof col.header == 'string'
           ? ({ column }: HeaderContext<object, unknown>) => (
               <DataTableColumnHeader
                 column={column}
@@ -140,7 +145,7 @@ export default function DataTable({
   if (enableSelection) {
     columns = [
       {
-        id: "select",
+        id: 'select',
         header: ({ table }: HeaderContext<object, unknown>) => (
           <Checkbox
             className="w-4"
@@ -170,7 +175,7 @@ export default function DataTable({
   }
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -186,12 +191,14 @@ export default function DataTable({
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    ...(disablePagination
+      ? {}
+      : { getPaginationRowModel: getPaginationRowModel() }),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    globalFilterFn: "includesString",
+    globalFilterFn: 'includesString',
 
     state: {
       sorting,
@@ -201,26 +208,27 @@ export default function DataTable({
     },
   });
   React.useEffect(() => {
-    table.setGlobalFilter(stringFilter ?? "");
+    table.setGlobalFilter(stringFilter ?? '');
   }, [stringFilter, table]);
   React.useEffect(() => {
     if (!enableSelection || !onSelectionChange) return;
     onSelectionChange(table.getFilteredSelectedRowModel().rows);
   }, [enableSelection, onSelectionChange, rowSelection, table]);
   return (
-    <div className={cn("w-full", className)}>
+    <div className={cn('w-full', className)}>
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
+                  console.log(header.getSize());
                   return (
                     <TableHead
                       className="min-w-0"
                       style={{
-                        width: header.getSize().toString() + "px",
-                        maxWidth: header.getSize().toString() + "px",
+                        width: header.getSize().toString() + 'px',
+                        maxWidth: header.getSize().toString() + 'px',
                       }}
                       key={header.id}
                     >
@@ -228,7 +236,7 @@ export default function DataTable({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -241,10 +249,10 @@ export default function DataTable({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                   className={cn(
-                    onRowClick ? "cursor-pointer" : "",
-                    getRowClassName ? getRowClassName(row) : ""
+                    onRowClick ? 'cursor-pointer' : '',
+                    getRowClassName ? getRowClassName(row) : '',
                   )}
                   onClick={
                     onRowClick
@@ -259,13 +267,13 @@ export default function DataTable({
                       key={cell.id}
                       className="min-w-0"
                       style={{
-                        width: cell.column.getSize().toString() + "px",
-                        maxWidth: cell.column.getSize().toString() + "px",
+                        width: cell.column.getSize().toString() + 'px',
+                        maxWidth: cell.column.getSize().toString() + 'px',
                       }}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -284,32 +292,34 @@ export default function DataTable({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        {enableSelection ? (
-          <div className="text-muted-foreground flex-1 text-sm">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} selected.
+      {!disablePagination && (
+        <div className="flex items-center justify-end space-x-2 py-4">
+          {enableSelection ? (
+            <div className="text-muted-foreground flex-1 text-sm">
+              {table.getFilteredSelectedRowModel().rows.length} of{' '}
+              {table.getFilteredRowModel().rows.length} selected.
+            </div>
+          ) : null}
+          <div className="space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
           </div>
-        ) : null}
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
         </div>
-      </div>
+      )}
     </div>
   );
 }
