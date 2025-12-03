@@ -210,7 +210,6 @@ function ComboboxTrigger({
     setOpen,
     disabled,
     setTriggerWidth,
-    validating,
     multiple,
     values,
     toggleValue,
