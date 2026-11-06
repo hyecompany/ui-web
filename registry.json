@@ -4,6 +4,14 @@
   "homepage": "https://github.com/hyecompany/ui-web",
   "items": [
     {
+      "name": "overflow-text",
+      "type": "registry:ui",
+      "files": [
+        { "path": "components/ui/overflow-text.tsx", "type": "registry:ui" },
+        { "path": "components/ui/overflow-text.css", "type": "registry:ui" }
+      ]
+    },
+    {
       "name": "spinner",
       "type": "registry:ui",
       "files": [

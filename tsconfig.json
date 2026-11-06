@@ -8,6 +8,7 @@
     "jsx": "react-jsx",
     "types": ["vite/client"],
     "target": "ES2022",
+    "lib": ["ES2022", "ES2022.Intl", "DOM", "DOM.Iterable"],
     "module": "esnext",
     "moduleResolution": "bundler",
     "declaration": true,
